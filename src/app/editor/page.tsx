@@ -60,107 +60,94 @@ export default function EditorPage() {
     e.stopPropagation();
     setIsDragging(false);
     setError(null);
-    
+  
     const { files } = e.dataTransfer;
-    if (files && files.length > 0) {
-      const newFiles: VideoFile[] = [];
-      
-      Array.from(files).forEach(file => {
-        if (validateFile(file)) {
-          const videoFile: VideoFile = {
-            id: `video-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            file,
-            preview: null,
-            name: file.name,
-            size: file.size,
-            type: file.type
-          };
-          
-          // Create video preview
-          const videoUrl = URL.createObjectURL(file);
-          const video = document.createElement('video');
-          video.preload = 'metadata';
-          video.onloadedmetadata = () => {
-            videoFile.duration = video.duration;
-            URL.revokeObjectURL(videoUrl);
-          };
-          video.src = videoUrl;
-          
-          // Create thumbnail
-          setTimeout(() => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 320;
-            canvas.height = 180;
-            const ctx = canvas.getContext('2d');
-            ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
-            videoFile.preview = canvas.toDataURL();
-            
-            // Update state with new preview
-            setVideoFiles(prev => prev.map(vf => 
-              vf.id === videoFile.id ? { ...vf, preview: videoFile.preview } : vf
-            ));
-          }, 1000);
-          
-          newFiles.push(videoFile);
-        }
-      });
-      
-      if (newFiles.length > 0) {
-        setVideoFiles(prev => [...prev, ...newFiles]);
-      }
-    }
+    const validFiles = Array.from(files).filter(validateFile);
+  
+    validFiles.forEach((file) => {
+      const id = `video-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const videoUrl = URL.createObjectURL(file);
+      const video = document.createElement('video');
+  
+      video.preload = 'metadata';
+      video.src = videoUrl;
+  
+      video.onloadedmetadata = () => {
+        video.currentTime = 0.1;
+      };
+  
+      video.onseeked = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 320;
+        canvas.height = 180;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const preview = canvas.toDataURL();
+  
+        const videoFile: VideoFile = {
+          id,
+          file,
+          preview,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          duration: video.duration,
+        };
+  
+        setVideoFiles((prev) => [...prev, videoFile]);
+        URL.revokeObjectURL(videoUrl);
+      };
+    });
   }, []);
+  
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
     const { files } = e.target;
-    
+  
     if (files && files.length > 0) {
-      const newFiles: VideoFile[] = [];
-      
       Array.from(files).forEach(file => {
         if (validateFile(file)) {
-          const videoFile: VideoFile = {
-            id: `video-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            file,
-            preview: null,
-            name: file.name,
-            size: file.size,
-            type: file.type
-          };
-          
-          // Create video preview (same as in handleDrop)
+          const id = `video-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
           const videoUrl = URL.createObjectURL(file);
           const video = document.createElement('video');
+  
           video.preload = 'metadata';
-          video.onloadedmetadata = () => {
-            videoFile.duration = video.duration;
-            URL.revokeObjectURL(videoUrl);
-          };
           video.src = videoUrl;
-          
-          setTimeout(() => {
+  
+          video.onloadedmetadata = () => {
+            video.currentTime = 0.1;
+          };
+  
+          video.onseeked = () => {
             const canvas = document.createElement('canvas');
             canvas.width = 320;
             canvas.height = 180;
             const ctx = canvas.getContext('2d');
             ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
-            videoFile.preview = canvas.toDataURL();
-            
-            setVideoFiles(prev => prev.map(vf => 
-              vf.id === videoFile.id ? { ...vf, preview: videoFile.preview } : vf
-            ));
-          }, 1000);
-          
-          newFiles.push(videoFile);
+            const preview = canvas.toDataURL();
+  
+            const videoFile: VideoFile = {
+              id,
+              file,
+              preview,
+              name: file.name,
+              size: file.size,
+              type: file.type,
+              duration: video.duration,
+            };
+  
+            setVideoFiles(prev => [...prev, videoFile]);
+            URL.revokeObjectURL(videoUrl);
+          };
         }
       });
-      
-      if (newFiles.length > 0) {
-        setVideoFiles(prev => [...prev, ...newFiles]);
-      }
+  
+      // Reset input value so same file can be selected again if needed
+      e.target.value = '';
     }
   };
+  
 
   const removeFile = (id: string) => {
     setVideoFiles(prev => prev.filter(file => file.id !== id));
