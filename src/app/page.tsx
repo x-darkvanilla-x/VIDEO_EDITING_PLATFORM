@@ -1,103 +1,137 @@
 import Image from "next/image";
+import SideNav from "@/components/SideNav";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="flex h-screen bg-background">
+      <SideNav />
+      
+      <main className="flex-1 overflow-auto">
+        <div className="container mx-auto px-8 py-10">
+          {/* Hero Section */}
+          <section className="mb-16">
+            <div className="flex flex-col items-center text-center mb-10">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">Professional Video Editing Made Simple</h1>
+              <p className="text-lg text-muted-foreground max-w-2xl mb-8">Create stunning videos with our powerful yet easy-to-use editing tools. Perfect for beginners and professionals alike.</p>
+              <div className="flex gap-4">
+                <a
+                  className="rounded-full bg-primary text-primary-foreground px-6 py-3 font-medium hover:bg-primary/90 transition-colors"
+                  href="/editor"
+                >
+                  Start Editing
+                </a>
+                <a
+                  className="rounded-full border border-border px-6 py-3 font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                  href="/templates"
+                >
+                  Browse Templates
+                </a>
+              </div>
+            </div>
+            <div className="relative h-[400px] rounded-xl overflow-hidden shadow-xl">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 z-10"></div>
+              <div className="absolute inset-0 flex items-center justify-center z-20">
+                <div className="bg-background/80 backdrop-blur-sm p-8 rounded-xl">
+                  <Image
+                    src="/next.svg"
+                    alt="VideoEdit Logo"
+                    width={180}
+                    height={38}
+                    priority
+                    className="dark:invert"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          {/* Features Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold mb-8 text-center">Powerful Editing Tools</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="bg-card p-6 rounded-xl shadow-sm">
+                <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                    <path d="m22 8-6 4 6 4V8Z"/>
+                    <rect x="2" y="6" width="14" height="12" rx="2"/>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Video Trimming</h3>
+                <p className="text-muted-foreground">Precisely trim and cut your videos with frame-by-frame accuracy.</p>
+              </div>
+              <div className="bg-card p-6 rounded-xl shadow-sm">
+                <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v8"/>
+                    <path d="M8 12h8"/>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Effects Library</h3>
+                <p className="text-muted-foreground">Add stunning visual effects and transitions from our extensive library.</p>
+              </div>
+              <div className="bg-card p-6 rounded-xl shadow-sm">
+                <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                    <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Audio Editing</h3>
+                <p className="text-muted-foreground">Fine-tune your audio with our advanced sound editing capabilities.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Recent Projects Section */}
+          <section className="mb-16">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-3xl font-bold">Recent Projects</h2>
+              <a href="/projects" className="text-primary hover:underline">View All</a>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="group relative rounded-xl overflow-hidden aspect-video bg-muted">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                    <div className="p-4 w-full">
+                      <h3 className="text-white font-medium truncate">Project {item}</h3>
+                      <p className="text-white/80 text-sm">Last edited 2 days ago</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Testimonials */}
+          <section>
+            <h2 className="text-3xl font-bold mb-8 text-center">What Our Users Say</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-card p-6 rounded-xl shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="h-10 w-10 rounded-full bg-primary/20 mr-3"></div>
+                  <div>
+                    <h4 className="font-semibold">Sarah Johnson</h4>
+                    <p className="text-sm text-muted-foreground">Content Creator</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground">"This video editor has completely transformed my workflow. The intuitive interface and powerful features make editing a breeze."</p>
+              </div>
+              <div className="bg-card p-6 rounded-xl shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="h-10 w-10 rounded-full bg-primary/20 mr-3"></div>
+                  <div>
+                    <h4 className="font-semibold">Michael Chen</h4>
+                    <p className="text-sm text-muted-foreground">Filmmaker</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground">"I've used many video editors, but this one stands out for its performance and feature set. It's become an essential tool in my creative process."</p>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
+    // </div>
   );
 }
