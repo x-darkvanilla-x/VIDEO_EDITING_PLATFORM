@@ -10,6 +10,21 @@ export default function Home() {
         <div className="container mx-auto px-8 py-10">
           {/* Hero Section */}
           <section className="mb-16">
+          <div className="relative h-[400px] rounded-xl overflow-hidden shadow-xl mb-20">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 z-10"></div>
+              <div className="absolute inset-0 flex items-center justify-center z-20">
+                <div className="bg-background/80 backdrop-blur-sm p-8 rounded-xl">
+                  <Image
+                    src="/next.svg"
+                    alt="VideoEdit Logo"
+                    width={180}
+                    height={38}
+                    priority
+                    className="dark:invert"
+                  />
+                </div>
+              </div>
+            </div>
             <div className="flex flex-col items-center text-center mb-10">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Professional Video Editing Made Simple</h1>
               <p className="text-lg text-muted-foreground max-w-2xl mb-8">Create stunning videos with our powerful yet easy-to-use editing tools. Perfect for beginners and professionals alike.</p>
@@ -28,21 +43,7 @@ export default function Home() {
                 </a>
               </div>
             </div>
-            <div className="relative h-[400px] rounded-xl overflow-hidden shadow-xl">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 z-10"></div>
-              <div className="absolute inset-0 flex items-center justify-center z-20">
-                <div className="bg-background/80 backdrop-blur-sm p-8 rounded-xl">
-                  <Image
-                    src="/next.svg"
-                    alt="VideoEdit Logo"
-                    width={180}
-                    height={38}
-                    priority
-                    className="dark:invert"
-                  />
-                </div>
-              </div>
-            </div>
+            
           </section>
 
           {/* Features Section */}
