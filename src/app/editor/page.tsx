@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Upload, X, Play, Film } from 'lucide-react';
+import { Upload, X, Play, Film, Scissors } from 'lucide-react';
+import Link from 'next/link';
 import SideNav from '@/components/SideNav';
 
 interface VideoFile {
@@ -251,12 +252,21 @@ export default function EditorPage() {
             </div>
           )}
           
-          {/* Timeline section placeholder */}
+          {/* Edit button */}
           {videoFiles.length > 0 && (
             <div className="bg-card p-6 rounded-xl shadow-sm">
-              <h2 className="text-xl font-semibold mb-4">Timeline</h2>
-              <div className="h-32 bg-muted rounded-lg flex items-center justify-center">
-                <p className="text-muted-foreground">Video timeline will appear here</p>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Ready to Edit</h2>
+                <Link 
+                  href="/editor/edit" 
+                  className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
+                >
+                  <Scissors size={18} />
+                  Edit Videos
+                </Link>
+              </div>
+              <div className="bg-muted rounded-lg p-4">
+                <p className="text-muted-foreground">Proceed to the editing interface to trim videos, arrange scenes, and create your final cut.</p>
               </div>
             </div>
           )}
