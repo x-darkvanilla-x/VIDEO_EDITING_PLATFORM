@@ -2,6 +2,25 @@ import Image from "next/image";
 import SideNav from "@/components/SideNav";
 
 export default function Home() {
+
+  const projects = [
+    {
+      id: 1,
+      name: "Finance Dashboard",
+      image: "https://marketplace.canva.com/EAFSv6o6beQ/2/0/1600w/canva-red-bold-finance-youtube-thumbnail-vGSnQGShz3c.jpg",
+    },
+    {
+      id: 2,
+      name: "Marketing Strategy",
+      image: "https://i.ytimg.com/vi/AiF5JNrRSUI/maxresdefault.jpg",
+    },
+    {
+      id: 3,
+      name: "Sales Analytics",
+      image: "https://marketplace.canva.com/EAEqfS4X0Xw/1/0/1600w/canva-most-attractive-youtube-thumbnail-wK95f3XNRaM.jpg",
+    },
+  ];
+
   return (
     <div className="flex h-screen bg-background">
       <SideNav />
@@ -10,22 +29,8 @@ export default function Home() {
         <div className="container mx-auto px-8 py-10">
           {/* Hero Section */}
           <section className="mb-16">
-          <div className="relative h-[400px] rounded-xl overflow-hidden shadow-xl mb-20">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 z-10"></div>
-              <div className="absolute inset-0 flex items-center justify-center z-20">
-                <div className="bg-background/80 backdrop-blur-sm p-8 rounded-xl">
-                  <Image
-                    src="/next.svg"
-                    alt="VideoEdit Logo"
-                    width={180}
-                    height={38}
-                    priority
-                    className="dark:invert"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col items-center text-center mb-10">
+          
+            <div className="flex flex-col items-center text-center mb-20 mt-10">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Professional Video Editing Made Simple</h1>
               <p className="text-lg text-muted-foreground max-w-2xl mb-8">Create stunning videos with our powerful yet easy-to-use editing tools. Perfect for beginners and professionals alike.</p>
               <div className="flex gap-4">
@@ -42,6 +47,13 @@ export default function Home() {
                   Browse Templates
                 </a>
               </div>
+            </div>
+
+            <div className="relative h-[400px] rounded-xl overflow-hidden shadow-xl mb-20">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 z-10" style={{
+                backgroundImage: `url('https://static.clideo.com/assets/images/editor/preview-desktop@2x.avif')`,
+                backgroundSize: 'cover',
+              }} ></div>
             </div>
             
           </section>
@@ -91,16 +103,23 @@ export default function Home() {
               <a href="/projects" className="text-primary hover:underline">View All</a>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="group relative rounded-xl overflow-hidden aspect-video bg-muted">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
-                    <div className="p-4 w-full">
-                      <h3 className="text-white font-medium truncate">Project {item}</h3>
-                      <p className="text-white/80 text-sm">Last edited 2 days ago</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            {projects.map((project) => (
+  <div
+    key={project.id}
+    className="group relative rounded-xl overflow-hidden aspect-video bg-muted"
+    style={{
+      backgroundImage: `url('${project.image}')`,
+      backgroundSize: 'cover',
+    }}
+  >
+    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+      <div className="p-4 w-full">
+        <h3 className="text-white font-medium truncate">{project.name}</h3>
+        <p className="text-white/80 text-sm">Last edited 2 days ago</p>
+      </div>
+    </div>
+  </div>
+))}
             </div>
           </section>
 
