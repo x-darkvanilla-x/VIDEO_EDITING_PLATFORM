@@ -79,8 +79,16 @@ export default function EditorPage() {
   
       video.onseeked = () => {
         const canvas = document.createElement('canvas');
-        canvas.width = 320;
-        canvas.height = 180;
+        const aspectRatio = video.videoWidth / video.videoHeight;
+        const maxWidth = 320;
+        const maxHeight = 180;
+        if (aspectRatio > 1) {
+          canvas.width = maxWidth;
+          canvas.height = maxWidth / aspectRatio;
+        } else {
+          canvas.height = maxHeight;
+          canvas.width = maxHeight * aspectRatio;
+        }
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
         const preview = canvas.toDataURL();
