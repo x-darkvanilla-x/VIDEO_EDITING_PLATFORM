@@ -10,6 +10,13 @@ interface VideoSegment {
   startTime: number;
   endTime: number;
   thumbnail: string;
+  videoIndex?: number;
+}
+
+interface VideoInfo {
+  url: string;
+  name: string;
+  duration: number;
 }
 
 export default function EditPage() {
@@ -18,12 +25,22 @@ export default function EditPage() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [draggedSegment, setDraggedSegment] = useState<string | null>(null);
+  const [videos, setVideos] = useState<VideoInfo[]>([]);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const timelineRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Mock data initialization
+  // Initialize videos from URL parameters
   useEffect(() => {
-    // This would normally come from the selected video in the editor page
+    const searchParams = new URLSearchParams(window.location.search);
+    const videosParam = searchParams.get('videos');
+    
+    if (videosParam) {
+      const videosList = JSON.parse(decodeURIComponent(videosParam));
+      setVideos(videosList);
+    }
+
+    // Initialize segments
     const mockSegments: VideoSegment[] = [
       {
         id: 'segment-1',
@@ -64,7 +81,8 @@ export default function EditPage() {
       id: `segment-${Date.now()}`,
       startTime: currentTime,
       endTime: Math.min(currentTime + 10, duration),
-      thumbnail: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="90" viewBox="0 0 160 90"><rect width="160" height="90" fill="%23553C9A"/><text x="80" y="45" font-family="Arial" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">New Scene</text></svg>`
+      thumbnail: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="90" viewBox="0 0 160 90"><rect width="160" height="90" fill="%23553C9A"/><text x="80" y="45" font-family="Arial" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">New Scene</text></svg>`,
+      videoIndex: currentVideoIndex
     };
     
     setSegments([...segments, newSegment]);
@@ -117,10 +135,31 @@ export default function EditPage() {
           {/* Video preview area */}
           <div className="bg-card rounded-xl overflow-hidden shadow-sm mb-8">
             <div className="aspect-video bg-black relative">
-              {/* This would be a real video player in a full implementation */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-white text-lg">Video Preview</div>
-              </div>
+              {videos.length > 0 ? (
+                <>
+                  <video
+                    ref={videoRef}
+                    src={videos[currentVideoIndex].url}
+                    className="w-full h-full"
+                    controls
+                  />
+                  <div className="absolute top-4 right-4 flex gap-2">
+                    {videos.map((video, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentVideoIndex(index)}
+                        className={`px-3 py-1 rounded ${index === currentVideoIndex ? 'bg-primary text-primary-foreground' : 'bg-black/50 text-white'}`}
+                      >
+                        Video {index + 1}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-white text-lg">No videos selected</div>
+                </div>
+              )}
               
               {/* Video controls */}
               <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-4 flex items-center">

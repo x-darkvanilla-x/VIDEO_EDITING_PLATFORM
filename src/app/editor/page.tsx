@@ -266,7 +266,11 @@ export default function EditorPage() {
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">Ready to Edit</h2>
                 <Link 
-                  href="/editor/edit" 
+                  href={`/editor/edit?videos=${encodeURIComponent(JSON.stringify(videoFiles.map(file => ({
+                    url: URL.createObjectURL(file.file),
+                    name: file.name,
+                    duration: file.duration
+                  }))))}`}
                   className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
                 >
                   <Scissors size={18} />
