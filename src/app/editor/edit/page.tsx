@@ -27,6 +27,7 @@ export default function EditPage() {
   const [draggedSegment, setDraggedSegment] = useState<string | null>(null);
   const [videos, setVideos] = useState<VideoInfo[]>([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [seeking, setSeeking] = useState(false);
   const timelineRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -66,9 +67,61 @@ export default function EditPage() {
     setDuration(60); // Mock 60 seconds duration
   }, []);
 
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.addEventListener('timeupdate', () => {
+        if (!seeking) {
+          setCurrentTime(videoRef.current?.currentTime || 0);
+        }
+      });
+      videoRef.current.addEventListener('loadedmetadata', () => {
+        setDuration(videoRef.current?.duration || 0);
+      });
+    }
+  }, [seeking]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      setIsPlaying(false);
+      setCurrentTime(0);
+      videoRef.current.currentTime = 0;
+      setDuration(videoRef.current.duration || 0);
+    }
+  }, [currentVideoIndex]);
+
   const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-    // In a real implementation, this would control the video playback
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (videoRef.current) {
+      const bounds = e.currentTarget.getBoundingClientRect();
+      const percent = (e.clientX - bounds.left) / bounds.width;
+      const newTime = percent * duration;
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const handleSeekStart = () => {
+    setSeeking(true);
+    if (videoRef.current && isPlaying) {
+      videoRef.current.pause();
+    }
+  };
+
+  const handleSeekEnd = () => {
+    setSeeking(false);
+    if (videoRef.current && isPlaying) {
+      videoRef.current.play();
+    }
   };
 
   const handleTimeUpdate = (time: number) => {
@@ -141,7 +194,8 @@ export default function EditPage() {
                     ref={videoRef}
                     src={videos[currentVideoIndex].url}
                     className="w-full h-full"
-                    controls
+                    onTimeUpdate={() => setCurrentTime(videoRef.current?.currentTime || 0)}
+                    onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
                   />
                   <div className="absolute top-4 right-4 flex gap-2">
                     {videos.map((video, index) => (
@@ -170,7 +224,13 @@ export default function EditPage() {
                   {isPlaying ? <Pause size={20} /> : <Play size={20} />}
                 </button>
                 
-                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                <div 
+                  className="flex-1 h-2 bg-muted rounded-full overflow-hidden cursor-pointer"
+                  onClick={handleSeek}
+                  onMouseDown={handleSeekStart}
+                  onMouseUp={handleSeekEnd}
+                  onMouseLeave={handleSeekEnd}
+                >
                   <div 
                     className="h-full bg-primary" 
                     style={{ width: `${(currentTime / duration) * 100}%` }}
