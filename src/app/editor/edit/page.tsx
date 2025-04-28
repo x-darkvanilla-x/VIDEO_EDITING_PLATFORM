@@ -13,6 +13,19 @@ interface VideoSegment {
   videoIndex?: number;
 }
 
+
+interface ImageOverlay {
+  id: string;
+  url: string;
+  position: { x: number; y: number };
+  size: { width: number; height: number };
+  style: {
+    opacity: number;
+    border: string;
+    animation?: string;
+  };
+}
+
 interface Subtitle {
   id: string;
   text: string;
@@ -43,6 +56,10 @@ export default function EditPage() {
   const [seeking, setSeeking] = useState(false);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [selectedSubtitle, setSelectedSubtitle] = useState<string | null>(null);
+  const [imageOverlays, setImageOverlays] = useState<ImageOverlay[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const timelineRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -213,6 +230,90 @@ export default function EditPage() {
                       onTimeUpdate={() => setCurrentTime(videoRef.current?.currentTime || 0)}
                       onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
                     />
+                    {/* Image Overlays */}
+                    {imageOverlays.map((overlay) => (
+                      <div
+                        key={overlay.id}
+                        className="absolute cursor-move"
+                        style={{
+                          left: `${overlay.position.x}%`,
+                          top: `${overlay.position.y}%`,
+                          width: `${overlay.size.width}px`,
+                          height: `${overlay.size.height}px`,
+                          opacity: overlay.style.opacity,
+                          border: overlay.style.border,
+                          animation: overlay.style.animation,
+                          transform: 'translate(-50%, -50%)',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseDown={(e) => {
+                          if (e.target === e.currentTarget) {
+                            setIsDragging(true);
+                            setSelectedImage(overlay.id);
+                            setDragStart({
+                              x: e.clientX,
+                              y: e.clientY
+                            });
+                          }
+                        }}
+                        onMouseMove={(e) => {
+                          if (isDragging && selectedImage === overlay.id) {
+                            const videoContainer = e.currentTarget.parentElement;
+                            if (videoContainer) {
+                              const rect = videoContainer.getBoundingClientRect();
+                              const deltaX = e.clientX - dragStart.x;
+                              const deltaY = e.clientY - dragStart.y;
+                              const newX = (overlay.position.x + (deltaX / rect.width) * 100);
+                              const newY = (overlay.position.y + (deltaY / rect.height) * 100);
+                              
+                              setImageOverlays(overlays =>
+                                overlays.map(img =>
+                                  img.id === overlay.id
+                                    ? { ...img, position: { x: newX, y: newY } }
+                                    : img
+                                )
+                              );
+                              setDragStart({ x: e.clientX, y: e.clientY });
+                            }
+                          }
+                        }}
+                        onMouseUp={() => {
+                          setIsDragging(false);
+                          setSelectedImage(null);
+                        }}
+                        onMouseLeave={() => {
+                          setIsDragging(false);
+                          setSelectedImage(null);
+                        }}
+                      >
+                        <img
+                          src={overlay.url}
+                          alt="Overlay"
+                          className="w-full h-full object-contain"
+                          style={{ pointerEvents: 'none' }}
+                        />
+                        <div className="absolute -top-8 left-0 right-0 flex justify-center gap-2">
+                          <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.1"
+                            value={overlay.style.opacity}
+                            onChange={(e) => {
+                              setImageOverlays(overlays =>
+                                overlays.map(img =>
+                                  img.id === overlay.id
+                                    ? { ...img, style: { ...img.style, opacity: parseFloat(e.target.value) } }
+                                    : img
+                                )
+                              );
+                            }}
+                            className="w-24"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    
                     {/* Subtitle Preview Overlay */}
                     {subtitles.map((subtitle) => (
                       currentTime >= subtitle.startTime && currentTime <= subtitle.endTime && (
@@ -302,7 +403,7 @@ export default function EditPage() {
           
 
           {/* Timeline interface */}
-          <div className="bg-card p-6 rounded-xl shadow-sm">
+          <div className="bg-card p-6 rounded-xl shadow-sm mb-8">
             <h2 className="text-xl font-semibold mb-4">Timeline</h2>
             
             {/* Time markers */}
@@ -367,6 +468,130 @@ export default function EditPage() {
                   No segments added. Click "Add Scene" to create your first segment.
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* Image Overlay Editor */}
+          <div className="bg-card p-6 rounded-xl shadow-sm mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Image Overlays</h2>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                      const newOverlay: ImageOverlay = {
+                        id: `image-${Date.now()}`,
+                        url: e.target?.result as string,
+                        position: { x: 50, y: 50 },
+                        size: { width: 200, height: 200 },
+                        style: {
+                          opacity: 1,
+                          border: '2px solid white',
+                        }
+                      };
+                      setImageOverlays([...imageOverlays, newOverlay]);
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                className="hidden"
+                id="image-upload"
+              />
+              <label
+                htmlFor="image-upload"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
+              >
+                <Plus size={18} />
+                Add Image
+              </label>
+            </div>
+
+            {/* Image Overlay List */}
+            <div className="space-y-4">
+              {imageOverlays.map((overlay) => (
+                <div
+                  key={overlay.id}
+                  className="p-4 rounded-lg border border-border"
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <img
+                      src={overlay.url}
+                      alt="Overlay preview"
+                      className="w-20 h-20 object-contain bg-sidebar rounded"
+                    />
+                    <div className="flex-1">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm mb-1">Width (px)</label>
+                          <input
+                            type="number"
+                            value={overlay.size.width}
+                            onChange={(e) => {
+                              setImageOverlays(overlays =>
+                                overlays.map(img =>
+                                  img.id === overlay.id
+                                    ? { ...img, size: { ...img.size, width: Number(e.target.value) } }
+                                    : img
+                                )
+                              );
+                            }}
+                            className="w-full px-2 py-1 rounded bg-sidebar border border-input"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm mb-1">Height (px)</label>
+                          <input
+                            type="number"
+                            value={overlay.size.height}
+                            onChange={(e) => {
+                              setImageOverlays(overlays =>
+                                overlays.map(img =>
+                                  img.id === overlay.id
+                                    ? { ...img, size: { ...img.size, height: Number(e.target.value) } }
+                                    : img
+                                )
+                              );
+                            }}
+                            className="w-full px-2 py-1 rounded bg-sidebar border border-input"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <label className="block text-sm mb-1">Border</label>
+                        <select
+                          value={overlay.style.border}
+                          onChange={(e) => {
+                            setImageOverlays(overlays =>
+                              overlays.map(img =>
+                                img.id === overlay.id
+                                  ? { ...img, style: { ...img.style, border: e.target.value } }
+                                  : img
+                              )
+                            );
+                          }}
+                          className="w-full px-2 py-1 rounded bg-sidebar border border-input"
+                        >
+                          <option value="none">None</option>
+                          <option value="2px solid white">Thin White</option>
+                          <option value="4px solid white">Thick White</option>
+                          <option value="2px solid black">Thin Black</option>
+                          <option value="4px solid black">Thick Black</option>
+                        </select>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setImageOverlays(overlays => overlays.filter(img => img.id !== overlay.id))}
+                      className="p-2 text-destructive hover:bg-destructive/10 rounded-full"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
