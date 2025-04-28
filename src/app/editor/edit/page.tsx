@@ -299,6 +299,77 @@ export default function EditPage() {
             </button>
           </div>
           
+          
+
+          {/* Timeline interface */}
+          <div className="bg-card p-6 rounded-xl shadow-sm">
+            <h2 className="text-xl font-semibold mb-4">Timeline</h2>
+            
+            {/* Time markers */}
+            <div className="flex mb-2">
+              {Array.from({ length: Math.ceil(duration / 10) + 1 }).map((_, i) => (
+                <div key={i} className="flex-1 text-xs text-muted-foreground">
+                  {i * 10}s
+                </div>
+              ))}
+            </div>
+            
+            {/* Timeline ruler */}
+            <div className="h-2 bg-muted rounded-full mb-4 relative">
+              {/* Current time indicator */}
+              <div 
+                className="absolute top-0 h-4 w-0.5 bg-primary -translate-y-1" 
+                style={{ left: `${(currentTime / duration) * 100}%` }}
+              ></div>
+            </div>
+            
+            {/* Video segments */}
+            <div 
+              ref={timelineRef}
+              className="flex gap-2 overflow-x-auto pb-4"
+              onDragOver={handleDragOver}
+            >
+              {segments.map((segment) => (
+                <div 
+                  key={segment.id}
+                  className={`relative flex-shrink-0 w-40 rounded-md overflow-hidden border-2 ${draggedSegment === segment.id ? 'border-primary' : 'border-transparent'}`}
+                  draggable
+                  onDragStart={() => handleDragStart(segment.id)}
+                  onDrop={() => handleDrop(segment.id)}
+                >
+                  <img 
+                    src={segment.thumbnail} 
+                    alt={`Segment ${segment.id}`}
+                    className="w-full aspect-video object-cover"
+                  />
+                  
+                  <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <button 
+                      className="p-1 rounded-full bg-white/20 hover:bg-white/40 transition-colors"
+                      onClick={() => handleRemoveSegment(segment.id)}
+                    >
+                      <Trash2 size={16} className="text-white" />
+                    </button>
+                    
+                    <button className="p-1 rounded-full bg-white/20 hover:bg-white/40 transition-colors">
+                      <MoveHorizontal size={16} className="text-white" />
+                    </button>
+                  </div>
+                  
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1 text-xs text-white">
+                    {Math.floor(segment.startTime)}s - {Math.floor(segment.endTime)}s
+                  </div>
+                </div>
+              ))}
+              
+              {segments.length === 0 && (
+                <div className="w-full py-10 flex items-center justify-center text-muted-foreground">
+                  No segments added. Click "Add Scene" to create your first segment.
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Subtitle Editor */}
           <div className="bg-card p-6 rounded-xl shadow-sm mb-8">
             <div className="flex justify-between items-center mb-4">
@@ -477,75 +548,6 @@ export default function EditPage() {
                   )}
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* Timeline interface */}
-          <div className="bg-card p-6 rounded-xl shadow-sm">
-            <h2 className="text-xl font-semibold mb-4">Timeline</h2>
-            
-            {/* Time markers */}
-            <div className="flex mb-2">
-              {Array.from({ length: Math.ceil(duration / 10) + 1 }).map((_, i) => (
-                <div key={i} className="flex-1 text-xs text-muted-foreground">
-                  {i * 10}s
-                </div>
-              ))}
-            </div>
-            
-            {/* Timeline ruler */}
-            <div className="h-2 bg-muted rounded-full mb-4 relative">
-              {/* Current time indicator */}
-              <div 
-                className="absolute top-0 h-4 w-0.5 bg-primary -translate-y-1" 
-                style={{ left: `${(currentTime / duration) * 100}%` }}
-              ></div>
-            </div>
-            
-            {/* Video segments */}
-            <div 
-              ref={timelineRef}
-              className="flex gap-2 overflow-x-auto pb-4"
-              onDragOver={handleDragOver}
-            >
-              {segments.map((segment) => (
-                <div 
-                  key={segment.id}
-                  className={`relative flex-shrink-0 w-40 rounded-md overflow-hidden border-2 ${draggedSegment === segment.id ? 'border-primary' : 'border-transparent'}`}
-                  draggable
-                  onDragStart={() => handleDragStart(segment.id)}
-                  onDrop={() => handleDrop(segment.id)}
-                >
-                  <img 
-                    src={segment.thumbnail} 
-                    alt={`Segment ${segment.id}`}
-                    className="w-full aspect-video object-cover"
-                  />
-                  
-                  <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <button 
-                      className="p-1 rounded-full bg-white/20 hover:bg-white/40 transition-colors"
-                      onClick={() => handleRemoveSegment(segment.id)}
-                    >
-                      <Trash2 size={16} className="text-white" />
-                    </button>
-                    
-                    <button className="p-1 rounded-full bg-white/20 hover:bg-white/40 transition-colors">
-                      <MoveHorizontal size={16} className="text-white" />
-                    </button>
-                  </div>
-                  
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1 text-xs text-white">
-                    {Math.floor(segment.startTime)}s - {Math.floor(segment.endTime)}s
-                  </div>
-                </div>
-              ))}
-              
-              {segments.length === 0 && (
-                <div className="w-full py-10 flex items-center justify-center text-muted-foreground">
-                  No segments added. Click "Add Scene" to create your first segment.
-                </div>
-              )}
             </div>
           </div>
         </div>
