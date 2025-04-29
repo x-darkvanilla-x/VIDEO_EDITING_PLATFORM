@@ -132,18 +132,7 @@ export default function EditPage() {
         id: "audio-1",
         startTime: 0,
         endTime: 15,
-        waveform:
-          `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='30' viewBox='0 0 160 30'><rect x='0' y='10' width='4' height='10' fill='%23666'/><rect x='6' y='6' width='4' height='18' fill='%23666'/><rect x='12' y='4' width='4' height='22' fill='%23666'/><rect x='18' y='8' width='4' height='14' fill='%23666'/><rect x='24' y='10' width='4' height='10' fill='%23666'/><rect x='30' y='12' width='4' height='6' fill='%23666'/><rect x='36' y='6' width='4' height='18' fill='%23666'/><rect x='42' y='4' width='4' height='22' fill='%23666'/><rect x='48' y='8' width='4' height='14' fill='%23666'/><rect x='54' y='10' width='4' height='10' fill='%23666'/><rect x='60' y='12' width='4' height='6' fill='%23666'/><rect x='66' y='10' width='4' height='10' fill='%23666'/><rect x='72' y='6' width='4' height='18' fill='%23666'/><rect x='78' y='4' width='4' height='22' fill='%23666'/><rect x='84' y='8' width='4' height='14' fill='%23666'/><rect x='90' y='10' width='4' height='10' fill='%23666'/><rect x='96' y='12' width='4' height='6' fill='%23666'/><rect x='102' y='6' width='4' height='18' fill='%23666'/><rect x='108' y='4' width='4' height='22' fill='%23666'/><rect x='114' y='8' width='4' height='14' fill='%23666'/><rect x='120' y='10' width='4' height='10' fill='%23666'/><rect x='126' y='12' width='4' height='6' fill='%23666'/><rect x='132' y='6' width='4' height='18' fill='%23666'/><rect x='138' y='4' width='4' height='22' fill='%23666'/><rect x='144' y='8' width='4' height='14' fill='%23666'/><rect x='150' y='10' width='4' height='10' fill='%23666'/></svg>`,
-        type: "main",
-        volume: 1,
-        isMuted: false,
-      },
-      {
-        id: "audio-2",
-        startTime: 15,
-        endTime: 30,
-        waveform:
-          `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='30' viewBox='0 0 160 30'><rect x='0' y='10' width='4' height='10' fill='%23666'/><rect x='6' y='6' width='4' height='18' fill='%23666'/><rect x='12' y='4' width='4' height='22' fill='%23666'/><rect x='18' y='8' width='4' height='14' fill='%23666'/><rect x='24' y='10' width='4' height='10' fill='%23666'/><rect x='30' y='12' width='4' height='6' fill='%23666'/><rect x='36' y='6' width='4' height='18' fill='%23666'/><rect x='42' y='4' width='4' height='22' fill='%23666'/><rect x='48' y='8' width='4' height='14' fill='%23666'/><rect x='54' y='10' width='4' height='10' fill='%23666'/><rect x='60' y='12' width='4' height='6' fill='%23666'/><rect x='66' y='10' width='4' height='10' fill='%23666'/><rect x='72' y='6' width='4' height='18' fill='%23666'/><rect x='78' y='4' width='4' height='22' fill='%23666'/><rect x='84' y='8' width='4' height='14' fill='%23666'/><rect x='90' y='10' width='4' height='10' fill='%23666'/><rect x='96' y='12' width='4' height='6' fill='%23666'/><rect x='102' y='6' width='4' height='18' fill='%23666'/><rect x='108' y='4' width='4' height='22' fill='%23666'/><rect x='114' y='8' width='4' height='14' fill='%23666'/><rect x='120' y='10' width='4' height='10' fill='%23666'/><rect x='126' y='12' width='4' height='6' fill='%23666'/><rect x='132' y='6' width='4' height='18' fill='%23666'/><rect x='138' y='4' width='4' height='22' fill='%23666'/><rect x='144' y='8' width='4' height='14' fill='%23666'/><rect x='150' y='10' width='4' height='10' fill='%23666'/></svg>`,
+        waveform: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='30' viewBox='0 0 160 30'><rect x='0' y='10' width='4' height='10' fill='%23666'/><rect x='6' y='6' width='4' height='18' fill='%23666'/><rect x='12' y='4' width='4' height='22' fill='%23666'/><rect x='18' y='8' width='4' height='14' fill='%23666'/><rect x='24' y='10' width='4' height='10' fill='%23666'/><rect x='30' y='12' width='4' height='6' fill='%23666'/><rect x='36' y='6' width='4' height='18' fill='%23666'/><rect x='42' y='4' width='4' height='22' fill='%23666'/><rect x='48' y='8' width='4' height='14' fill='%23666'/><rect x='54' y='10' width='4' height='10' fill='%23666'/><rect x='60' y='12' width='4' height='6' fill='%23666'/><rect x='66' y='10' width='4' height='10' fill='%23666'/><rect x='72' y='6' width='4' height='18' fill='%23666'/><rect x='78' y='4' width='4' height='22' fill='%23666'/><rect x='84' y='8' width='4' height='14' fill='%23666'/><rect x='90' y='10' width='4' height='10' fill='%23666'/><rect x='96' y='12' width='4' height='6' fill='%23666'/><rect x='102' y='6' width='4' height='18' fill='%23666'/><rect x='108' y='4' width='4' height='22' fill='%23666'/><rect x='114' y='8' width='4' height='14' fill='%23666'/><rect x='120' y='10' width='4' height='10' fill='%23666'/><rect x='126' y='12' width='4' height='6' fill='%23666'/><rect x='132' y='6' width='4' height='18' fill='%23666'/><rect x='138' y='4' width='4' height='22' fill='%23666'/><rect x='144' y='8' width='4' height='14' fill='%23666'/><rect x='150' y='10' width='4' height='10' fill='%23666'/></svg>`,
         type: "main",
         volume: 1,
         isMuted: false,
@@ -514,7 +503,7 @@ export default function EditPage() {
               <Scissors size={18} />
               Split
             </button>
-          </div>     
+          </div>
           {/* Timeline interface */}
           <div className="bg-card p-6 rounded-xl shadow-sm mb-8">
             <h2 className="text-xl font-semibold mb-4">Timeline</h2>
@@ -608,7 +597,29 @@ export default function EditPage() {
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    setBackgroundMusic(URL.createObjectURL(file));
+                    const objectUrl = URL.createObjectURL(file);
+                    setBackgroundMusic(objectUrl); // Assuming you use this somewhere else
+
+                    setAudioSegments((prevSegments) => {
+                      const newSegment: AudioSegment = {
+                        id: `audio-${Date.now()}`,
+                        startTime: 0,
+                        endTime: 15, // You might want to dynamically calculate this
+                        waveform: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='30' viewBox='0 0 160 30'><rect x='0' y='10' width='4' height='10' fill='%23666'/><rect x='6' y='6' width='4' height='18' fill='%23666'/><rect x='12' y='4' width='4' height='22' fill='%23666'/><rect x='18' y='8' width='4' height='14' fill='%23666'/><rect x='24' y='10' width='4' height='10' fill='%23666'/><rect x='30' y='12' width='4' height='6' fill='%23666'/><rect x='36' y='6' width='4' height='18' fill='%23666'/><rect x='42' y='4' width='4' height='22' fill='%23666'/><rect x='48' y='8' width='4' height='14' fill='%23666'/><rect x='54' y='10' width='4' height='10' fill='%23666'/><rect x='60' y='12' width='4' height='6' fill='%23666'/><rect x='66' y='10' width='4' height='10' fill='%23666'/><rect x='72' y='6' width='4' height='18' fill='%23666'/><rect x='78' y='4' width='4' height='22' fill='%23666'/><rect x='84' y='8' width='4' height='14' fill='%23666'/><rect x='90' y='10' width='4' height='10' fill='%23666'/><rect x='96' y='12' width='4' height='6' fill='%23666'/><rect x='102' y='6' width='4' height='18' fill='%23666'/><rect x='108' y='4' width='4' height='22' fill='%23666'/><rect x='114' y='8' width='4' height='14' fill='%23666'/><rect x='120' y='10' width='4' height='10' fill='%23666'/><rect x='126' y='12' width='4' height='6' fill='%23666'/><rect x='132' y='6' width='4' height='18' fill='%23666'/><rect x='138' y='4' width='4' height='22' fill='%23666'/><rect x='144' y='8' width='4' height='14' fill='%23666'/><rect x='150' y='10' width='4' height='10' fill='%23666'/></svg>`, // Optional: generate waveform for new audio
+                        type: "background",
+                        volume: 1,
+                        isMuted: false,
+                      };
+
+                      const latestMainSegment = prevSegments.find(
+                        (seg) => seg.type === "main"
+                      );
+
+                      return [
+                        ...(latestMainSegment ? [latestMainSegment] : []),
+                        newSegment,
+                      ];
+                    });
                   }
                 }}
                 className="text-sm text-muted-foreground"
