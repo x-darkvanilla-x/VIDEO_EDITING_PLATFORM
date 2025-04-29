@@ -20,6 +20,18 @@ interface VideoSegment {
   endTime: number;
   thumbnail: string;
   videoIndex?: number;
+
+  isMuted?: boolean;
+}
+
+interface AudioSegment {
+  id: string;
+  startTime: number;
+  endTime: number;
+  waveform: string;
+  type: "main" | "background";
+  volume: number;
+  isMuted: boolean;
 }
 
 interface ImageOverlay {
@@ -57,6 +69,8 @@ interface VideoInfo {
 
 export default function EditPage() {
   const [segments, setSegments] = useState<VideoSegment[]>([]);
+  const [audioSegments, setAudioSegments] = useState<AudioSegment[]>([]);
+  const [backgroundMusic, setBackgroundMusic] = useState<string>("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -111,6 +125,32 @@ export default function EditPage() {
 
     setSegments(mockSegments);
     setDuration(60); // Mock 60 seconds duration
+
+    // Initialize mock audio segments
+    const mockAudioSegments: AudioSegment[] = [
+      {
+        id: "audio-1",
+        startTime: 0,
+        endTime: 15,
+        waveform:
+          'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="30" viewBox="0 0 160 30"><path d="M0 15 Q 20 5, 40 15 T 80 15 T 120 15 T 160 15" stroke="%23666" fill="none"/></svg>',
+        type: "main",
+        volume: 1,
+        isMuted: false,
+      },
+      {
+        id: "audio-2",
+        startTime: 15,
+        endTime: 30,
+        waveform:
+          'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="30" viewBox="0 0 160 30"><path d="M0 15 Q 20 25, 40 15 T 80 15 T 120 15 T 160 15" stroke="%23666" fill="none"/></svg>',
+        type: "main",
+        volume: 1,
+        isMuted: false,
+      },
+    ];
+
+    setAudioSegments(mockAudioSegments);
   }, []);
 
   useEffect(() => {
@@ -232,7 +272,7 @@ export default function EditPage() {
             isOpen={showExportModal}
             onClose={() => {
               setShowExportModal(false);
-              window.location.href = '/';
+              window.location.href = "/";
             }}
             onExport={() => {}}
           />
@@ -474,83 +514,157 @@ export default function EditPage() {
               <Scissors size={18} />
               Split
             </button>
-          </div>
-
+          </div>     
           {/* Timeline interface */}
           <div className="bg-card p-6 rounded-xl shadow-sm mb-8">
             <h2 className="text-xl font-semibold mb-4">Timeline</h2>
 
-            {/* Time markers */}
-            <div className="flex mb-2">
-              {Array.from({ length: Math.ceil(duration / 10) + 1 }).map(
-                (_, i) => (
-                  <div key={i} className="flex-1 text-xs text-muted-foreground">
-                    {i * 10}s
-                  </div>
-                )
-              )}
-            </div>
-
-            {/* Timeline ruler */}
-            <div className="h-2 bg-muted rounded-full mb-4 relative">
-              {/* Current time indicator */}
-              <div
-                className="absolute top-0 h-4 w-0.5 bg-primary -translate-y-1"
-                style={{ left: `${(currentTime / duration) * 100}%` }}
-              ></div>
-            </div>
-
-            {/* Video segments */}
-            <div
-              ref={timelineRef}
-              className="flex gap-2 overflow-x-auto pb-4"
-              onDragOver={handleDragOver}
-            >
-              {segments.map((segment) => (
-                <div
-                  key={segment.id}
-                  className={`relative flex-shrink-0 w-40 rounded-md overflow-hidden border-2 ${
-                    draggedSegment === segment.id
-                      ? "border-primary"
-                      : "border-transparent"
-                  }`}
-                  draggable
-                  onDragStart={() => handleDragStart(segment.id)}
-                  onDrop={() => handleDrop(segment.id)}
-                >
-                  <img
-                    src={segment.thumbnail}
-                    alt={`Segment ${segment.id}`}
-                    className="w-full aspect-video object-cover"
-                  />
-
-                  <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <button
-                      className="p-1 rounded-full bg-white/20 hover:bg-white/40 transition-colors"
-                      onClick={() => handleRemoveSegment(segment.id)}
+            {/* Audio waveform and controls */}
+            <div className="mb-6 space-y-4">
+              {/* Time markers */}
+              <div className="flex mb-2">
+                {Array.from({ length: Math.ceil(duration / 10) + 1 }).map(
+                  (_, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 text-xs text-muted-foreground"
                     >
-                      <Trash2 size={16} className="text-white" />
-                    </button>
+                      {i * 10}s
+                    </div>
+                  )
+                )}
+              </div>
 
-                    <button className="p-1 rounded-full bg-white/20 hover:bg-white/40 transition-colors">
-                      <MoveHorizontal size={16} className="text-white" />
-                    </button>
+              {/* Timeline ruler */}
+              <div className="h-2 bg-muted rounded-full mb-4 relative">
+                {/* Current time indicator */}
+                <div
+                  className="absolute top-0 h-4 w-0.5 bg-primary -translate-y-1"
+                  style={{ left: `${(currentTime / duration) * 100}%` }}
+                ></div>
+              </div>
+
+              {/* Video segments */}
+              <div
+                ref={timelineRef}
+                className="flex gap-2 overflow-x-auto pb-4"
+                onDragOver={handleDragOver}
+              >
+                {segments.map((segment) => (
+                  <div
+                    key={segment.id}
+                    className={`relative flex-shrink-0 w-40 rounded-md overflow-hidden border-2 ${
+                      draggedSegment === segment.id
+                        ? "border-primary"
+                        : "border-transparent"
+                    }`}
+                    draggable
+                    onDragStart={() => handleDragStart(segment.id)}
+                    onDrop={() => handleDrop(segment.id)}
+                  >
+                    <img
+                      src={segment.thumbnail}
+                      alt={`Segment ${segment.id}`}
+                      className="w-full aspect-video object-cover"
+                    />
+
+                    <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <button
+                        className="p-1 rounded-full bg-white/20 hover:bg-white/40 transition-colors"
+                        onClick={() => handleRemoveSegment(segment.id)}
+                      >
+                        <Trash2 size={16} className="text-white" />
+                      </button>
+
+                      <button className="p-1 rounded-full bg-white/20 hover:bg-white/40 transition-colors">
+                        <MoveHorizontal size={16} className="text-white" />
+                      </button>
+                    </div>
+
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1 text-xs text-white">
+                      {Math.floor(segment.startTime)}s -{" "}
+                      {Math.floor(segment.endTime)}s
+                    </div>
                   </div>
+                ))}
 
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1 text-xs text-white">
-                    {Math.floor(segment.startTime)}s -{" "}
-                    {Math.floor(segment.endTime)}s
+                {segments.length === 0 && (
+                  <div className="w-full py-10 flex items-center justify-center text-muted-foreground">
+                    No segments added. Click "Add Scene" to create your first
+                    segment.
                   </div>
-                </div>
-              ))}
-
-              {segments.length === 0 && (
-                <div className="w-full py-10 flex items-center justify-center text-muted-foreground">
-                  No segments added. Click "Add Scene" to create your first
-                  segment.
-                </div>
-              )}
+                )}
+              </div>
             </div>
+          </div>
+
+          {/* Audio Wave Forms */}
+          <div className="bg-card p-6 rounded-xl shadow-sm mb-8">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-xl font-semibold mb-4">Audio Tracks</h2>
+              <input
+                type="file"
+                accept="audio/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setBackgroundMusic(URL.createObjectURL(file));
+                  }
+                }}
+                className="text-sm text-muted-foreground"
+              />
+            </div>
+
+            {audioSegments.map((segment) => (
+              <div
+                key={segment.id}
+                className="flex items-center gap-4 p-4 bg-accent rounded-lg mb-2"
+              >
+                <div className="flex-1">
+                  <img
+                    src={segment.waveform}
+                    alt="Audio waveform"
+                    className="w-full h-8"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={segment.volume}
+                    onChange={(e) => {
+                      const newVolume = parseFloat(e.target.value);
+                      setAudioSegments((segments) =>
+                        segments.map((s) =>
+                          s.id === segment.id ? { ...s, volume: newVolume } : s
+                        )
+                      );
+                    }}
+                    className="w-24"
+                  />
+                  <button
+                    onClick={() => {
+                      setAudioSegments((segments) =>
+                        segments.map((s) =>
+                          s.id === segment.id
+                            ? { ...s, isMuted: !s.isMuted }
+                            : s
+                        )
+                      );
+                    }}
+                    className={`p-2 rounded-full ${
+                      segment.isMuted
+                        ? "bg-destructive text-destructive-foreground"
+                        : "bg-primary text-primary-foreground"
+                    }`}
+                  >
+                    {segment.isMuted ? "🔇" : "🔊"}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Image Overlay Editor */}
