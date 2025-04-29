@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import SideNav from "@/components/SideNav";
+import ExportModal from "@/components/ExportModal";
 
 interface VideoSegment {
   id: string;
@@ -69,6 +70,7 @@ export default function EditPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [showExportModal, setShowExportModal] = useState(false);
   const timelineRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -226,14 +228,32 @@ export default function EditPage() {
 
       <main className="flex-1 overflow-auto">
         <div className="container mx-auto px-8 py-10">
-          <div className="flex items-center mb-8">
-            <Link
-              href="/editor"
-              className="mr-4 p-2 rounded-full hover:bg-accent"
+          <ExportModal
+            isOpen={showExportModal}
+            onClose={() => {
+              setShowExportModal(false);
+              window.location.href = '/';
+            }}
+            onExport={() => {}}
+          />
+
+          <div className="flex items-center mb-8 justify-between">
+            <div className="flex items-center">
+              <Link
+                href="/editor"
+                className="mr-4 p-2 rounded-full hover:bg-accent"
+              >
+                <ArrowLeft size={24} />
+              </Link>
+              <h1 className="text-3xl font-bold">Video Timeline Editor</h1>
+            </div>
+
+            <button
+              onClick={() => setShowExportModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
-              <ArrowLeft size={24} />
-            </Link>
-            <h1 className="text-3xl font-bold">Video Timeline Editor</h1>
+              Export Video
+            </button>
           </div>
 
           {/* Video preview area */}
